@@ -2,7 +2,7 @@
 
 
 // Calculating the Check Sum
-unsigned short	checksum(void *b, int len)
+unsigned short	ping_checksum(void *b, int len)
 {
 	unsigned short	*buf = b;
 	unsigned int	sum = 0;

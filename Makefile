@@ -24,6 +24,8 @@ UNAME_S := $(shell uname -s)
 
 SRC_PATH=srcs/
 SRC_NAME=main.c\
+	core/dns.c\
+	core/request.c\
 	utils/checksum.c\
 	utils/singletons.c
 

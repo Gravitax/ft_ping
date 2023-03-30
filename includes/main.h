@@ -46,10 +46,19 @@ struct	ping_pkt
 
 typedef struct	s_env
 {
-	bool	pingloop;
+	bool				pingloop;
+	int					sockfd;
+	char				*addr;
+	char				*ip_addr, *reverse_hostname;
+	struct sockaddr_in	addr_con;
 }				t_env;
 
-unsigned short	checksum(void *b, int len);
+// core
+char			ping_dns(t_env *env);
+void			ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom, char *ping_ip, char *rev_host);
+
+// utils
+unsigned short	ping_checksum(void *b, int len);
 t_env			*st_env(t_env *env, bool unsave);
 
 
