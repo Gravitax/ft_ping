@@ -15,18 +15,22 @@ void	intHandler(int dummy)
 
 char	ft_ping(t_env *env, char *addr)
 {
+	char	code;
+
 	env->pingloop = true;
 	env->addr = addr;
 
 	// dns
-	ping_dns(env);
+	if ((code = ping_dns(env)) != 0)
+		return (code);
 
 	// socket
+	// check strace ping 8.8.8.8 pour avoir plus dinfos sur les flags
 	env->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if (env->sockfd < 0)
 	{
 		printf("Socket file descriptor not received!!\n");
-		return (0);
+		return (-1);
 	}
 	else
 		printf("Socket file descriptor %d received\n", env->sockfd);
@@ -35,11 +39,11 @@ char	ft_ping(t_env *env, char *addr)
 	signal(SIGINT, intHandler);
 
 	// send pings continuously
-	ping_request(env->sockfd, &env->addr_con, env->reverse_hostname, env->ip_addr, env->addr);
+	if ((code = ping_request(env->sockfd, &env->addr_con, env->reverse_hostname, env->ip_addr, env->addr)) != 0)
+		return (code);
 
 	// saving the env in a global singleton
 	st_env(env, false);
-
 	return (0);
 }
 

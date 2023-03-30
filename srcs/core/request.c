@@ -2,7 +2,7 @@
 
 
 // make a ping request
-void	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom, char *ping_ip, char *rev_host)
+char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom, char *ping_ip, char *rev_host)
 {
 	int	ttl_val = 64, msg_count = 0, i, addr_len, flag = 1, msg_received_count = 0;
 	
@@ -22,7 +22,7 @@ void	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 	if (setsockopt(ping_sockfd, SOL_IP, IP_TTL, &ttl_val, sizeof(ttl_val)) != 0)
 	{
 		printf("Setting socket options to TTL failed!\n");
-		return ;
+		return (0);
 	}
 	else
 	{
@@ -105,6 +105,8 @@ void	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 	printf("===%s ping statistics===\n", ping_ip);
 	printf("%d packets sent, %d packets received, %f percent packet loss. Total time: %Lf ms.\n\n",
 		msg_count, msg_received_count,
-		((msg_count - msg_received_count)/msg_count) * 100.0f,
+		((msg_count - msg_received_count) / msg_count) * 100.0f,
 		total_msec);
+
+	return (0);
 }
