@@ -24,6 +24,7 @@ UNAME_S := $(shell uname -s)
 
 SRC_PATH=srcs/
 SRC_NAME=main.c\
+	utils/checksum.c\
 	utils/singletons.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
