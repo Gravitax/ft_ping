@@ -32,19 +32,13 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 	// setting timeout of recv setting
 	setsockopt(ping_sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof tv_out);
 
-	printf("1\n");
-
 	t_env	*env = st_env(NULL, false);
-
-	printf("2\n");
 
 	// send icmp packet in an infinite loop
 	while (env->pingloop)
 	{
 		// flag is whether packet was sent or not
 		flag = 1;
-
-		printf("in loop\n");
 	
 		//filling packet
 		bzero(&pckt, sizeof(pckt));
@@ -102,8 +96,6 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 				}
 			}
 		}
-
-		printf("end loop\n");
 	}
 	clock_gettime(CLOCK_MONOTONIC, &tfe);
 	double timeElapsed = ((double)(tfe.tv_nsec-tfs.tv_nsec)) / 1000000.0f;
@@ -115,8 +107,6 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 		msg_count, msg_received_count,
 		((msg_count - msg_received_count) / msg_count) * 100.0f,
 		total_msec);
-
-	printf("end request\n");
 
 	return (0);
 }

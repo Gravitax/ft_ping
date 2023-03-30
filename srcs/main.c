@@ -38,12 +38,12 @@ char	ft_ping(t_env *env, char *addr)
 	// catching interrupt
 	signal(SIGINT, intHandler);
 
+	// saving the env in a global singleton
+	st_env(env, false);
+
 	// send pings continuously
 	if ((code = ping_request(env->sockfd, &env->addr_con, env->reverse_hostname, env->ip_addr, env->addr)) != 0)
 		return (code);
-
-	// saving the env in a global singleton
-	st_env(env, false);
 	return (0);
 }
 
