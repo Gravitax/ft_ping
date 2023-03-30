@@ -223,11 +223,9 @@ void send_ping(int ping_sockfd, struct sockaddr_in *ping_addr,
 		}
 	}
 	clock_gettime(CLOCK_MONOTONIC, &tfe);
-	double timeElapsed = ((double)(tfe.tv_nsec -
-						tfs.tv_nsec))/1000000.0;
+	double timeElapsed = ((double)(tfe.tv_nsec-tfs.tv_nsec))/1000000.0;
 	
-	total_msec = (tfe.tv_sec-tfs.tv_sec)*1000.0+
-						timeElapsed
+	total_msec = (tfe.tv_sec-tfs.tv_sec)*1000.0+timeElapsed;
 					
 	printf("\n===%s ping statistics===\n", ping_ip);
 	printf("\n%d packets sent, %d packets received, %f percent packet loss. Total time: %Lf ms.\n\n",
