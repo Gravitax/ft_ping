@@ -5,7 +5,7 @@
 // Performs a DNS lookup
 static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 {
-	printf("Resolving DNS..\n");
+	printf("Resolving DNS...\n");
 	struct hostent	*host_entity;
 	char			*ip = (char *)malloc(NI_MAXHOST * sizeof(char));
 	int				i;
@@ -59,6 +59,6 @@ char			ping_dns(t_env *env)
 		return (-1);
 	}
 	printf("Trying to connect to '%s' IP: %s\n", env->addr, env->ip_addr);
-	printf("Reverse Lookup domain: %s", env->reverse_hostname);
+	printf("Reverse Lookup domain: %s\n", env->reverse_hostname);
 	return (0);
 }

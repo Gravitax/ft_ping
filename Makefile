@@ -26,6 +26,7 @@ SRC_PATH=srcs/
 SRC_NAME=main.c\
 	core/dns.c\
 	core/request.c\
+	core/socket.c\
 	utils/checksum.c\
 	utils/singletons.c
 

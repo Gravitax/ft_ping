@@ -26,7 +26,7 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 	}
 	else
 	{
-		printf("Socket set to TTL..\n");
+		printf("Socket set to TTL...\n");
 	}
 
 	// setting timeout of recv setting
@@ -87,7 +87,7 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 				}
 				else
 				{
-					printf("%d bytes from %s (h: %s) (%s) msg_seq=%d ttl=%d rtt = %Lf ms.\n",
+					printf("%d bytes from %s (h: %s) (%s) msg_seq=%d ttl=%d rtt=%Lf ms.\n",
 						PING_PKT_S, ping_dom, rev_host,
 						ping_ip, msg_count,
 						ttl_val, rtt_msec);
@@ -102,7 +102,7 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 	
 	total_msec = (tfe.tv_sec-tfs.tv_sec) * 1000.0f + timeElapsed;
 					
-	printf("===%s ping statistics===\n", ping_ip);
+	printf("\n===%s ping statistics===\n", ping_ip);
 	printf("%d packets sent, %d packets received, %f percent packet loss. Total time: %Lf ms.\n\n",
 		msg_count, msg_received_count,
 		((msg_count - msg_received_count) / msg_count) * 100.0f,

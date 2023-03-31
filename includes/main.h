@@ -3,21 +3,23 @@
 
 
 # include <stdio.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <netdb.h>
 # include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
+# include <stdbool.h>
+
+# include <sys/types.h>
+# include <sys/socket.h>
+
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <netdb.h>
 # include <netinet/ip_icmp.h>
+
 # include <time.h>
 # include <fcntl.h>
 # include <signal.h>
-# include <time.h>
 
-# include <stdbool.h>
 
 # include "../libs/libft/libft.h"
 
@@ -28,8 +30,6 @@
 // Automatic port number
 # define PORT_NO 0
 
-// Automatic port number
-// #define PING_SLEEP_RATE 1000000 x
 # define PING_SLEEP_RATE 1000000 
 
 // Gives the timeout delay for receiving packets
@@ -38,10 +38,10 @@
 
 
 // ping packet structure
-struct	ping_pkt
+struct			ping_pkt
 {
 	struct icmphdr	hdr;
-	char			msg[PING_PKT_S-sizeof(struct icmphdr)];
+	char			msg[PING_PKT_S - sizeof(struct icmphdr)];
 };
 
 typedef struct	s_env
@@ -56,6 +56,7 @@ typedef struct	s_env
 // core
 char			ping_dns(t_env *env);
 char			ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom, char *ping_ip, char *rev_host);
+char			ping_socket(t_env *env);
 
 // utils
 unsigned short	ping_checksum(void *b, int len);
