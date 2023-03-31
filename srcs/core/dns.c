@@ -43,7 +43,6 @@ static char		*reverse_dns_lookup(char *ip_addr)
 
 char			ping_dns(t_env *env)
 {
-	printf("Resolving DNS...\n");
 	// Performs a DNS lookup
 	env->ip_addr = dns_lookup(env->addr, &env->addr_con);
 	if (env->ip_addr == NULL)
@@ -52,7 +51,5 @@ char			ping_dns(t_env *env)
 	env->reverse_hostname = reverse_dns_lookup(env->ip_addr);
 	if (env->reverse_hostname == NULL)
 		return (ERR_RDNS);
-	printf("Trying to connect to '%s' IP: %s\n", env->addr, env->ip_addr);
-	printf("Reverse Lookup domain: %s\n", env->reverse_hostname);
 	return (0);
 }

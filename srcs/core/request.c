@@ -95,7 +95,7 @@ static void	ping_stats(t_env *env)
 	long double		total_msec;
 
 	env->time_elapsed = ((double)(env->tfe.tv_nsec - env->tfs.tv_nsec)) / 1000000.0f;
-	
+
 	total_msec = (env->tfe.tv_sec - env->tfs.tv_sec) * 1000.0f + env->time_elapsed;
 					
 	printf("\n=== %s ping statistics ===\n", env->ip_addr);

@@ -23,6 +23,9 @@ int				ping_exit(t_env *env, char code)
 		ft_strdel(&env->reverse_hostname);
 	if (env->sockfd)
 		close(env->sockfd);
+	// put the singleton at NULL
+	st_env(NULL, true);
+	// display error message if there is one
 	error_handler(env, code);
 	return (code == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
