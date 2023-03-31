@@ -48,6 +48,7 @@ typedef struct	s_env
 {
 	bool				pingloop;
 	int					sockfd;
+	int					ttl_val, msg_count, msg_received_count;
 	char				*addr;
 	char				*ip_addr, *reverse_hostname;
 	struct sockaddr_in	addr_con;
@@ -55,7 +56,7 @@ typedef struct	s_env
 
 // core
 char			ping_dns(t_env *env);
-char			ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom, char *ping_ip, char *rev_host);
+char			ping_request(t_env *env);
 char			ping_socket(t_env *env);
 
 // utils

@@ -25,7 +25,7 @@ static char	ft_ping(t_env *env, char *addr)
 	// dns + socket + request loop
 	if ((code = ping_dns(env)) != 0
 			|| (code = ping_socket(env)) != 0
-			|| (code = ping_request(env->sockfd, &env->addr_con, env->reverse_hostname, env->ip_addr, env->addr)) != 0)
+			|| (code = ping_request(env)) != 0)
 		return (code);
 	return (0);
 }

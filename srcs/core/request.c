@@ -1,38 +1,15 @@
 #include "../../includes/main.h"
 
 
-// make a ping request
-char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom, char *ping_ip, char *rev_host)
+static char	ping_loop(t_env *env)
 {
-	int	ttl_val = 64, msg_count = 0, i, addr_len, flag = 1, msg_received_count = 0;
-	
+	int		i, addr_len, flag = 1;
+
+	struct timespec		time_start, time_end;
 	struct ping_pkt		pckt;
 	struct sockaddr_in	r_addr;
-	struct timespec		time_start, time_end, tfs, tfe;
-	long double			rtt_msec = 0, total_msec = 0;
-	struct timeval		tv_out;
 
-	tv_out.tv_sec = RECV_TIMEOUT;
-	tv_out.tv_usec = 0;
-
-	clock_gettime(CLOCK_MONOTONIC, &tfs);
-	
-	// set socket options at ip to TTL and value to 64,
-	// change to what you want by setting ttl_val
-	if (setsockopt(ping_sockfd, SOL_IP, IP_TTL, &ttl_val, sizeof(ttl_val)) != 0)
-	{
-		printf("Setting socket options to TTL failed!\n");
-		return (0);
-	}
-	else
-	{
-		printf("Socket set to TTL...\n");
-	}
-
-	// setting timeout of recv setting
-	setsockopt(ping_sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof tv_out);
-
-	t_env	*env = st_env(NULL, false);
+	long double			rtt_msec = 0;
 
 	// send icmp packet in an infinite loop
 	while (env->pingloop)
@@ -50,24 +27,23 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 			pckt.msg[i] = i + '0';
 		
 		pckt.msg[i] = 0;
-		pckt.hdr.un.echo.sequence = msg_count++;
+		pckt.hdr.un.echo.sequence = env->msg_count++;
 		pckt.hdr.checksum = ping_checksum(&pckt, sizeof(pckt));
-
 
 		usleep(PING_SLEEP_RATE);
 
 		//send packet
 		clock_gettime(CLOCK_MONOTONIC, &time_start);
-		if (sendto(ping_sockfd, &pckt, sizeof(pckt), 0, (struct sockaddr*) ping_addr, sizeof(*ping_addr)) <= 0)
+		if (sendto(env->sockfd, &pckt, sizeof(pckt), 0, (struct sockaddr *)&env->addr_con, sizeof(env->addr_con)) <= 0)
 		{
 			printf("Packet Sending Failed!\n");
 			flag = 0;
 		}
 
 		//receive packet
-		addr_len=sizeof(r_addr);
+		addr_len = sizeof(r_addr);
 
-		if (recvfrom(ping_sockfd, &pckt, sizeof(pckt), 0, (struct sockaddr*)&r_addr, &addr_len) <= 0 && msg_count > 1)
+		if (recvfrom(env->sockfd, &pckt, sizeof(pckt), 0, (struct sockaddr *)&r_addr, &addr_len) <= 0 && env->msg_count > 1)
 		{
 			printf("Packet receive failed!\n");
 		}
@@ -88,25 +64,61 @@ char	ping_request(int ping_sockfd, struct sockaddr_in *ping_addr, char *ping_dom
 				else
 				{
 					printf("%d bytes from %s (h: %s) (%s) msg_seq=%d ttl=%d rtt=%Lf ms.\n",
-						PING_PKT_S, ping_dom, rev_host,
-						ping_ip, msg_count,
-						ttl_val, rtt_msec);
+						PING_PKT_S, env->reverse_hostname, env->addr,
+						env->ip_addr, env->msg_count,
+						env->ttl_val, rtt_msec);
 
-					msg_received_count++;
+					env->msg_received_count++;
 				}
 			}
 		}
 	}
-	clock_gettime(CLOCK_MONOTONIC, &tfe);
-	double timeElapsed = ((double)(tfe.tv_nsec-tfs.tv_nsec)) / 1000000.0f;
+}
+
+// make a ping request
+char		ping_request(t_env *env)
+{
+	env->ttl_val = 64;
+	env->msg_count = 0;
+	env->msg_received_count = 0;
+
+	struct timespec		tfs, tfe;
+	long double			total_msec = 0;
+	struct timeval		tv_out;
+
+	tv_out.tv_sec = RECV_TIMEOUT;
+	tv_out.tv_usec = 0;
+
+	clock_gettime(CLOCK_MONOTONIC, &tfs);
 	
-	total_msec = (tfe.tv_sec-tfs.tv_sec) * 1000.0f + timeElapsed;
+	// set socket options at ip to TTL and value to 64,
+	// change to what you want by setting ttl_val
+	if (setsockopt(env->sockfd, SOL_IP, IP_TTL, &env->ttl_val, sizeof(env->ttl_val)) != 0)
+	{
+		printf("Setting socket options to TTL failed!\n");
+		return (0);
+	}
+	else
+	{
+		printf("Socket set to TTL...\n");
+	}
+
+	// setting timeout of recv setting
+	setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof(tv_out));
+
+
+	ping_loop(env);
+
+
+	clock_gettime(CLOCK_MONOTONIC, &tfe);
+	double timeElapsed = ((double)(tfe.tv_nsec - tfs.tv_nsec)) / 1000000.0f;
+	
+	total_msec = (tfe.tv_sec - tfs.tv_sec) * 1000.0f + timeElapsed;
 					
-	printf("\n===%s ping statistics===\n", ping_ip);
+	printf("\n=== %s ping statistics ===\n", env->ip_addr);
 	printf("%d packets sent, %d packets received, %f percent packet loss. Total time: %Lf ms.\n\n",
-		msg_count, msg_received_count,
-		((msg_count - msg_received_count) / msg_count) * 100.0f,
-		total_msec);
+		env->msg_count, env->msg_received_count,
+		((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f, total_msec);
 
 	return (0);
 }
