@@ -68,6 +68,7 @@ static char	packet_receive(t_env *env)
 			}
 		}
 	}
+	return (0);
 }
 
 static char	ping_loop(t_env *env)
