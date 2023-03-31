@@ -49,12 +49,13 @@ typedef struct	s_env
 	bool				pingloop;
 	int					sockfd, flag, addr_len;
 	int					ttl_val, msg_count, msg_received_count;
-	long double			rtt_msec;
-	char				*addr;
-	char				*ip_addr, *reverse_hostname;
+	char				*addr, *ip_addr, *reverse_hostname;
 	struct sockaddr_in	addr_con, r_addr;
 	struct ping_pkt		pckt;
-	struct timespec		time_start, time_end;
+	struct timeval		tv_out;
+	struct timespec		time_start, time_end, tfs, tfe;
+	double				time_elapsed;
+	long double			rtt_msec;
 }				t_env;
 
 // core
@@ -64,6 +65,7 @@ char			ping_socket(t_env *env);
 
 // utils
 unsigned short	ping_checksum(void *b, int len);
+int				ping_exit(t_env *env, char code);
 t_env			*st_env(t_env *env, bool unsave);
 
 

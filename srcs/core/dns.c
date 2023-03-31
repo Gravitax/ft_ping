@@ -5,20 +5,19 @@
 // Performs a DNS lookup
 static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 {
-	printf("Resolving DNS...\n");
 	struct hostent	*host_entity;
 	char			*ip = (char *)malloc(NI_MAXHOST * sizeof(char));
 	int				i;
 
-	if ((host_entity = gethostbyname(addr_host)) == NULL)
+	if (ip == NULL || (host_entity = gethostbyname(addr_host)) == NULL)
 		return (NULL);
 	
 	//filling up address structure
 	strcpy(ip, inet_ntoa(*(struct in_addr *)host_entity->h_addr));
 
 	(*addr_con).sin_family = host_entity->h_addrtype;
-	(*addr_con).sin_port = htons (PORT_NO);
-	(*addr_con).sin_addr.s_addr = *(long*)host_entity->h_addr;
+	(*addr_con).sin_port = htons(PORT_NO);
+	(*addr_con).sin_addr.s_addr = *(long *)host_entity->h_addr;
 
 	return (ip);
 }
@@ -34,16 +33,18 @@ static char		*reverse_dns_lookup(char *ip_addr)
 	temp_addr.sin_addr.s_addr = inet_addr(ip_addr);
 	len = sizeof(struct sockaddr_in);
 
-	if (getnameinfo((struct sockaddr *) &temp_addr, len, buf, sizeof(buf), NULL, 0, NI_NAMEREQD))
+	ret_buf = (char *)malloc((strlen(buf) + 1) * sizeof(char));
+
+	if (ret_buf == NULL || getnameinfo((struct sockaddr *) &temp_addr, len, buf, sizeof(buf), NULL, 0, NI_NAMEREQD))
 		return (NULL);
 
-	ret_buf = (char *)malloc((strlen(buf) + 1) * sizeof(char));
 	strcpy(ret_buf, buf);
 	return (ret_buf);
 }
 
 char			ping_dns(t_env *env)
 {
+	printf("Resolving DNS...\n");
 	// Performs a DNS lookup
 	env->ip_addr = dns_lookup(env->addr, &env->addr_con);
 	if (env->ip_addr == NULL)

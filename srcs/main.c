@@ -42,5 +42,5 @@ int		main(int argc, char **argv)
 	}
 	ft_memset(&env, 0, sizeof(t_env));
 	code = ft_ping(&env, argv[1]);
-	return (code == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+	return (ping_exit(&env, code));
 }

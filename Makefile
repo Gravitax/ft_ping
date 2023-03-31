@@ -28,6 +28,7 @@ SRC_NAME=main.c\
 	core/request.c\
 	core/socket.c\
 	utils/checksum.c\
+	utils/exit.c\
 	utils/singletons.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))

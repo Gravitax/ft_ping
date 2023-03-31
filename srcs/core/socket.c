@@ -7,7 +7,7 @@ char		ping_socket(t_env *env)
 	env->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if (env->sockfd < 0)
 	{
-		printf("Socket file descriptor not received!!\n");
+		printf("Socket file descriptor not received!\n");
 		return (-1);
 	}
 	else

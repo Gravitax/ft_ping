@@ -25,7 +25,8 @@ static char	packet_send(t_env *env)
 {
 	usleep(PING_SLEEP_RATE);
 	clock_gettime(CLOCK_MONOTONIC, &env->time_start);
-	if (sendto(env->sockfd, &env->pckt, sizeof(env->pckt), 0, (struct sockaddr *)&env->addr_con, sizeof(env->addr_con)) <= 0)
+	if (sendto(env->sockfd, &env->pckt, sizeof(env->pckt), 0,
+		(struct sockaddr *)&env->addr_con, sizeof(env->addr_con)) <= 0)
 	{
 		printf("Packet Sending Failed!\n");
 		env->flag = 0;
@@ -47,8 +48,8 @@ static char	packet_receive(t_env *env)
 	{
 		clock_gettime(CLOCK_MONOTONIC, &env->time_end);
 			
-		double timeElapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
-		env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + timeElapsed;
+		env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
+		env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
 			
 		// if packet was not sent, don't receive
 		if (env->flag)
@@ -71,11 +72,11 @@ static char	packet_receive(t_env *env)
 	return (0);
 }
 
+// send icmp packet in an infinite loop
 static char	ping_loop(t_env *env)
 {
 	char	code;
 
-	// send icmp packet in an infinite loop
 	while (env->pingloop)
 	{
 		// flag is whether packet was sent or not
@@ -88,6 +89,21 @@ static char	ping_loop(t_env *env)
 	return (0);
 }
 
+// print total ping stats
+static void	ping_stats(t_env *env)
+{
+	long double		total_msec;
+
+	env->time_elapsed = ((double)(env->tfe.tv_nsec - env->tfs.tv_nsec)) / 1000000.0f;
+	
+	total_msec = (env->tfe.tv_sec - env->tfs.tv_sec) * 1000.0f + env->time_elapsed;
+					
+	printf("\n=== %s ping statistics ===\n", env->ip_addr);
+	printf("%d packets sent, %d packets received, %f percent packet loss. Total time: %Lf ms.\n\n",
+		env->msg_count, env->msg_received_count,
+		((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f, total_msec);
+}
+
 // make a ping request
 char		ping_request(t_env *env)
 {
@@ -97,14 +113,10 @@ char		ping_request(t_env *env)
 	env->msg_count = 0;
 	env->msg_received_count = 0;
 
-	struct timespec		tfs, tfe;
-	long double			total_msec = 0;
-	struct timeval		tv_out;
+	env->tv_out.tv_sec = RECV_TIMEOUT;
+	env->tv_out.tv_usec = 0;
 
-	tv_out.tv_sec = RECV_TIMEOUT;
-	tv_out.tv_usec = 0;
-
-	clock_gettime(CLOCK_MONOTONIC, &tfs);
+	clock_gettime(CLOCK_MONOTONIC, &env->tfs);
 	
 	// set socket options at ip to TTL and value to 64,
 	// change to what you want by setting ttl_val
@@ -119,22 +131,13 @@ char		ping_request(t_env *env)
 	}
 
 	// setting timeout of recv setting
-	setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof(tv_out));
-
+	setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
 
 	if ((code = ping_loop(env)) != 0)
 		return (code);
 
+	clock_gettime(CLOCK_MONOTONIC, &env->tfe);
 
-	clock_gettime(CLOCK_MONOTONIC, &tfe);
-	double timeElapsed = ((double)(tfe.tv_nsec - tfs.tv_nsec)) / 1000000.0f;
-	
-	total_msec = (tfe.tv_sec - tfs.tv_sec) * 1000.0f + timeElapsed;
-					
-	printf("\n=== %s ping statistics ===\n", env->ip_addr);
-	printf("%d packets sent, %d packets received, %f percent packet loss. Total time: %Lf ms.\n\n",
-		env->msg_count, env->msg_received_count,
-		((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f, total_msec);
-
+	ping_stats(env);
 	return (0);
 }
