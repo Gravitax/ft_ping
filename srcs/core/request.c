@@ -110,11 +110,7 @@ char		ping_request(t_env *env)
 	char	code;
 
 	env->ttl_val = 64;
-	env->msg_count = 0;
-	env->msg_received_count = 0;
-
 	env->tv_out.tv_sec = RECV_TIMEOUT;
-	env->tv_out.tv_usec = 0;
 
 	clock_gettime(CLOCK_MONOTONIC, &env->tfs);
 	

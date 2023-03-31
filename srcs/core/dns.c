@@ -18,7 +18,6 @@ static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 	(*addr_con).sin_family = host_entity->h_addrtype;
 	(*addr_con).sin_port = htons(PORT_NO);
 	(*addr_con).sin_addr.s_addr = *(long *)host_entity->h_addr;
-
 	return (ip);
 }
 

@@ -2,7 +2,7 @@
 
 
 // Interrupt handler
-static void	intHandler(int dummy)
+static void	int_handler(int dummy)
 {
 	t_env	*env = st_env(NULL, false);
 	
@@ -19,8 +19,10 @@ static char	ft_ping(t_env *env, char *addr)
 	env->pingloop = true;
 	env->addr = addr;
 
+	env->ttl_val = 64;
+
 	// catching interrupt
-	signal(SIGINT, intHandler);
+	signal(SIGINT, int_handler);
 
 	// dns + socket + request loop
 	if ((code = ping_dns(env)) != 0
@@ -30,7 +32,7 @@ static char	ft_ping(t_env *env, char *addr)
 	return (0);
 }
 
-int		main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	t_env	env;
 	char	code = -1;
