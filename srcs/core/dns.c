@@ -12,7 +12,7 @@ static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 	if (ip == NULL || (host_entity = gethostbyname(addr_host)) == NULL)
 		return (NULL);
 	
-	//filling up address structure
+	// filling up address structure
 	strcpy(ip, inet_ntoa(*(struct in_addr *)host_entity->h_addr));
 
 	(*addr_con).sin_family = host_entity->h_addrtype;
@@ -47,17 +47,11 @@ char			ping_dns(t_env *env)
 	// Performs a DNS lookup
 	env->ip_addr = dns_lookup(env->addr, &env->addr_con);
 	if (env->ip_addr == NULL)
-	{
-		printf("DNS lookup failed! Could not resolve hostname!\n");
-		return (-1);
-	}
+		return (ERR_DNS);
 	// Resolves the reverse lookup of the hostname
 	env->reverse_hostname = reverse_dns_lookup(env->ip_addr);
 	if (env->reverse_hostname == NULL)
-	{
-		printf("Could not resolve reverse lookup of hostname\n");
-		return (-1);
-	}
+		return (ERR_RDNS);
 	printf("Trying to connect to '%s' IP: %s\n", env->addr, env->ip_addr);
 	printf("Reverse Lookup domain: %s\n", env->reverse_hostname);
 	return (0);

@@ -22,6 +22,7 @@
 
 
 # include "../libs/libft/libft.h"
+# include "./error.h"
 
 // Define the Packet Constants
 // ping packet size

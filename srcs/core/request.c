@@ -39,8 +39,8 @@ static char	packet_receive(t_env *env)
 {
 	env->addr_len = sizeof(env->r_addr);
 
-	if (recvfrom(env->sockfd, &env->pckt, sizeof(env->pckt), 0, (struct sockaddr *)&env->r_addr,
-		&env->addr_len) <= 0 && env->msg_count > 1)
+	if (recvfrom(env->sockfd, &env->pckt, sizeof(env->pckt), 0, (struct sockaddr *)&env->r_addr, &env->addr_len) <= 0
+		&& env->msg_count > 1)
 	{
 		printf("Packet receive failed!\n");
 	}
@@ -117,14 +117,9 @@ char		ping_request(t_env *env)
 	// set socket options at ip to TTL and value to 64,
 	// change to what you want by setting ttl_val
 	if (setsockopt(env->sockfd, SOL_IP, IP_TTL, &env->ttl_val, sizeof(env->ttl_val)) != 0)
-	{
-		printf("Setting socket options to TTL failed!\n");
-		return (-1);
-	}
+		return (ERR_TTL);
 	else
-	{
 		printf("Socket set to TTL...\n");
-	}
 
 	// setting timeout of recv setting
 	setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
