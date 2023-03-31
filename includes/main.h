@@ -47,11 +47,14 @@ struct			ping_pkt
 typedef struct	s_env
 {
 	bool				pingloop;
-	int					sockfd;
+	int					sockfd, flag, addr_len;
 	int					ttl_val, msg_count, msg_received_count;
+	long double			rtt_msec;
 	char				*addr;
 	char				*ip_addr, *reverse_hostname;
-	struct sockaddr_in	addr_con;
+	struct sockaddr_in	addr_con, r_addr;
+	struct ping_pkt		pckt;
+	struct timespec		time_start, time_end;
 }				t_env;
 
 // core
