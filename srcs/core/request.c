@@ -60,7 +60,7 @@ static char	packet_receive(t_env *env)
 			}
 			else
 			{
-				printf("%d bytes from %s (h: %s) (%s) msg_seq=%d ttl=%d rtt=%Lf ms.\n",
+				printf("%d bytes from %s (h: %s) (%s): icmp_seq=8=%d ttl=%d time=%.2Lf ms.\n",
 					PING_PKT_S, env->reverse_hostname, env->addr,
 					env->ip_addr, env->msg_count,
 					env->ttl_val, env->rtt_msec);
@@ -99,7 +99,7 @@ static void	ping_stats(t_env *env)
 	total_msec = (env->tfe.tv_sec - env->tfs.tv_sec) * 1000.0f + env->time_elapsed;
 					
 	printf("\n=== %s ping statistics ===\n", env->ip_addr);
-	printf("%d packets sent, %d packets received, %f percent packet loss. Total time: %Lf ms.\n\n",
+	printf("%d packets transmitted, %d received, %f%% packet loss, time %.2Lf ms.\n\n",
 		env->msg_count, env->msg_received_count,
 		((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f, total_msec);
 }
