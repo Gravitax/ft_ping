@@ -7,7 +7,6 @@ static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 {
 	struct hostent	*host_entity;
 	char			*ip = (char *)malloc(NI_MAXHOST * sizeof(char));
-	int				i;
 
 	if (ip == NULL || (host_entity = gethostbyname(addr_host)) == NULL)
 		return (NULL);
@@ -51,5 +50,5 @@ int			ping_dns(t_env *env)
 	env->reverse_hostname = reverse_dns_lookup(env->ip_addr);
 	if (env->reverse_hostname == NULL)
 		return (ERR_RDNS);
-	return (0);
+	return (ERR_NONE);
 }

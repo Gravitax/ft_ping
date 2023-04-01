@@ -3,7 +3,14 @@
 
 void			ping_help()
 {
-	printf("this is the help\n");
+	printf("Usage:\n"
+		"    ft_ping [options] <destination>\n"
+		"\n"
+		"Options:\n"
+		"    <destination>		dns name or ip address\n"
+		"    -v				verbose output\n"
+		"    -h				print help and exit\n"
+	);
 }
 
 static void		error_handler(t_env *env, int code)

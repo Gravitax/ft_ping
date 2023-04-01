@@ -17,7 +17,7 @@ static int	packet_fill(t_env *env)
 	env->pckt.msg[i] = 0;
 	env->pckt.hdr.un.echo.sequence = env->msg_count++;
 	env->pckt.hdr.checksum = ping_checksum(&env->pckt, sizeof(env->pckt));
-	return (0);
+	return (ERR_NONE);
 }
 
 // send packet
@@ -31,7 +31,7 @@ static int	packet_send(t_env *env)
 		printf("Packet Sending Failed!\n");
 		env->flag = 0;
 	}
-	return (0);
+	return (ERR_NONE);
 }
 
 // receive packet
@@ -69,7 +69,7 @@ static int	packet_receive(t_env *env)
 			}
 		}
 	}
-	return (0);
+	return (ERR_NONE);
 }
 
 // send icmp packet in an infinite loop
@@ -81,12 +81,12 @@ static int	ping_loop(t_env *env)
 	{
 		// flag is whether packet was sent or not
 		env->flag = 1;
-		if ((code = packet_fill(env)) != 0
-				|| (code = packet_send(env)) != 0
-				|| (code = packet_receive(env)) != 0)
+		if ((code = packet_fill(env)) != ERR_NONE
+				|| (code = packet_send(env)) != ERR_NONE
+				|| (code = packet_receive(env)) != ERR_NONE)
 			return (code);
 	}
-	return (0);
+	return (ERR_NONE);
 }
 
 // print total ping stats
@@ -109,14 +109,13 @@ int			ping_request(t_env *env)
 {
 	int	code;
 
-	env->ttl_val = 64;
 	env->tv_out.tv_sec = RECV_TIMEOUT;
 
 	clock_gettime(CLOCK_MONOTONIC, &env->tfs);
 	
 	// set socket options at ip to TTL and value to 64,
 	// change to what you want by setting ttl_val
-	if (setsockopt(env->sockfd, SOL_IP, IP_TTL, &env->ttl_val, sizeof(env->ttl_val)) != 0)
+	if (setsockopt(env->sockfd, SOL_IP, IP_TTL, &env->ttl_val, sizeof(env->ttl_val)) != ERR_NONE)
 		return (ERR_TTL);
 	else
 		printf("Socket set to TTL...\n");
@@ -124,11 +123,11 @@ int			ping_request(t_env *env)
 	// setting timeout of recv setting
 	setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
 
-	if ((code = ping_loop(env)) != 0)
+	if ((code = ping_loop(env)) != ERR_NONE)
 		return (code);
 
 	clock_gettime(CLOCK_MONOTONIC, &env->tfe);
 
 	ping_stats(env);
-	return (0);
+	return (ERR_NONE);
 }

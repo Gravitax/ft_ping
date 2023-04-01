@@ -9,6 +9,6 @@ int		ping_socket(t_env *env)
 		return (ERR_SOCKET);
 	}
 	printf("Socket file descriptor %d received\n", env->sockfd);
-	return (0);
+	return (ERR_NONE);
 }
 
