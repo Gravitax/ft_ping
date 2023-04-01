@@ -2,7 +2,7 @@
 
 
 // filling packet
-static char	packet_fill(t_env *env)
+static int	packet_fill(t_env *env)
 {
 	int	i;
 
@@ -21,7 +21,7 @@ static char	packet_fill(t_env *env)
 }
 
 // send packet
-static char	packet_send(t_env *env)
+static int	packet_send(t_env *env)
 {
 	usleep(PING_SLEEP_RATE);
 	clock_gettime(CLOCK_MONOTONIC, &env->time_start);
@@ -35,7 +35,7 @@ static char	packet_send(t_env *env)
 }
 
 // receive packet
-static char	packet_receive(t_env *env)
+static int	packet_receive(t_env *env)
 {
 	env->addr_len = sizeof(env->r_addr);
 
@@ -73,9 +73,9 @@ static char	packet_receive(t_env *env)
 }
 
 // send icmp packet in an infinite loop
-static char	ping_loop(t_env *env)
+static int	ping_loop(t_env *env)
 {
-	char	code;
+	int	code;
 
 	while (env->pingloop)
 	{
@@ -105,9 +105,9 @@ static void	ping_stats(t_env *env)
 }
 
 // make a ping request
-char		ping_request(t_env *env)
+int			ping_request(t_env *env)
 {
-	char	code;
+	int	code;
 
 	env->ttl_val = 64;
 	env->tv_out.tv_sec = RECV_TIMEOUT;

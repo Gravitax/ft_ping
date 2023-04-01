@@ -1,7 +1,12 @@
 #include "../../includes/main.h"
 
 
-static void		error_handler(t_env *env, char code)
+void			ping_help()
+{
+	printf("this is the help\n");
+}
+
+static void		error_handler(t_env *env, int code)
 {
 	const char	*msg;
 
@@ -11,11 +16,14 @@ static void		error_handler(t_env *env, char code)
 	// Get the current error message
 	msg = &errors[code].msg[0];
 	// Display it
-	if (errors[code].msg[1])
+	if (errors[code].display == true)
 		printf("ft_ping : error : %s\n", msg);
+	// Display usage if needed
+	if (errors[code].usage == true)
+		ping_help();
 }
 
-int				ping_exit(t_env *env, char code)
+int				ping_exit(t_env *env, int code)
 {
 	if (env->ip_addr)
 		ft_strdel(&env->ip_addr);

@@ -41,7 +41,7 @@ static char		*reverse_dns_lookup(char *ip_addr)
 	return (ret_buf);
 }
 
-char			ping_dns(t_env *env)
+int			ping_dns(t_env *env)
 {
 	// Performs a DNS lookup
 	env->ip_addr = dns_lookup(env->addr, &env->addr_con);

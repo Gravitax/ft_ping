@@ -9,15 +9,19 @@ static void	int_handler(int dummy)
 	env->pingloop = false;
 }
 
-static char	ft_ping(t_env *env, char *addr)
+static int	ft_ping(t_env *env, char *addr)
 {
-	char	code;
+	int	code;
 
 	// cloning env ptr in a singleton
 	st_env(env, false);
 
 	env->pingloop = true;
+
+	// il faut checks i cest un ipv4 ou non
 	env->addr = addr;
+
+	printf("addr : %s\n", addr);
 
 	env->ttl_val = 64;
 
@@ -35,14 +39,27 @@ static char	ft_ping(t_env *env, char *addr)
 int			main(int argc, char **argv)
 {
 	t_env	env;
-	char	code = -1;
+	int		code, opt;
 
-	if (argc != 2)
-	{
-		printf("Usage: sudo %s <address>\n", argv[0]);
-		return (EXIT_FAILURE);
-	}
+	// désactiver les messages d'erreur de getopt
+	opterr = 0;
+
 	ft_memset(&env, 0, sizeof(t_env));
-	code = ft_ping(&env, argv[1]);
+
+	while ((opt = getopt(argc, argv, "v:h"))) {
+		if (argc == 2 && opt == -1)
+			break ;
+		switch (opt) {
+			case '?': case -1:
+				code = ERR_ARGS;
+				return (ping_exit(&env, code));
+			case 'v':
+				env.verbose = true;
+			case 'h':
+				ping_help();
+				return (EXIT_SUCCESS);
+		}
+	}
+	code = ft_ping(&env, argv[argc - 1]);
 	return (ping_exit(&env, code));
 }
