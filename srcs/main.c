@@ -56,12 +56,12 @@ int			main(int argc, char **argv)
 
 	ft_memset(&env, 0, sizeof(t_env));
 
-	int		i = 0;
-
 	// désactiver les messages d'erreur de getopt
 	opterr = 0;
-	while ((opt = getopt(argc, argv, "v:h"))) {
-		if (argc == 2 && opt == -1 || ++i > argc - 1)
+	for (int i = 0; i < argc; i++)
+	{
+		opt = getopt(argc, argv, "v:h");
+		if (argc == 2 && opt == -1)
 			break ;
 		switch (opt) {
 			case '?':
