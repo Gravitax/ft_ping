@@ -9,7 +9,7 @@ enum					e_error
 {
 	ERR_NONE = 0,
 	ERR_ARGS,
-	ERR_IPV4,
+	ERR_SUDO,
 	ERR_DNS,
 	ERR_RDNS,
 	ERR_SOCKET,
@@ -26,11 +26,11 @@ typedef	struct			s_error
 
 static const t_error	errors[ERR_MAX] = {
 	[ERR_ARGS] = {"Invalid usage", true, true},
-	[ERR_IPV4] = {"Invalid address", true, true},
+	[ERR_SUDO] = {"You need SUDO privileges", true, true},
 	[ERR_DNS] = {"DNS lookup failed! Could not resolve hostname!", true, false},
-	[ERR_RDNS] = {"Could not resolve reverse lookup of hostname", true, false},
+	[ERR_RDNS] = {"RDNS lookup failed! Could not resolve reverse lookup of hostname", true, false},
 	[ERR_SOCKET] = {"Socket file descriptor not received!", true, false},
-	[ERR_TTL] = {"Setting socket options to TTL failed!", true, false},
+	[ERR_TTL] = {"Setting socket options to TTL failed!", true, false}
 };
 
 

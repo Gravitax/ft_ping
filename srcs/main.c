@@ -9,24 +9,6 @@ static void	int_handler(int dummy)
 	env->pingloop = false;
 }
 
-static bool	is_ipv4_addr(char *addr)
-{
-	char	**tmp = ft_strsplit(addr, ".");
-	int		nb, arr_len = ft_arrlen(tmp);
-
-	if (arr_len != 2 && arr_len != 4)
-		return (false);
-	if (arr_len == 4) {
-		for (int i = 0; i < 4; i++)
-		{
-			nb = ft_atoi(tmp[i]);
-			if (nb < 0 || nb > 255)
-				return (false);
-		}
-	}
-	return (true);
-}
-
 static int	ft_ping(t_env *env, char *addr)
 {
 	int	code;
@@ -35,14 +17,8 @@ static int	ft_ping(t_env *env, char *addr)
 	st_env(env, false);
 
 	env->pingloop = true;
-
-	if (is_ipv4_addr(addr) == false)
-		return (ERR_IPV4);
-
 	env->addr = addr;
 	env->ttl_val = 64;
-
-	printf("addr : %s, ttl: %d\n", env->addr, env->ttl_val);
 
 	// catching interrupt
 	signal(SIGINT, int_handler);
@@ -64,6 +40,10 @@ int			main(int argc, char **argv)
 		ping_help();
 		return (EXIT_SUCCESS);
 	}
+	// if (getuid() != 0) {
+	// 	ping_exit(NULL, ERR_SUDO);
+	// 	return (EXIT_FAILURE);
+	// }
 
 	ft_memset(&env, 0, sizeof(t_env));
 

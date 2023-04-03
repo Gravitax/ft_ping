@@ -32,14 +32,16 @@ static void		error_handler(int code)
 
 int				ping_exit(t_env *env, int code)
 {
-	if (env->ip_addr)
-		ft_strdel(&env->ip_addr);
-	if (env->reverse_hostname)
-		ft_strdel(&env->reverse_hostname);
-	if (env->sockfd)
-		close(env->sockfd);
-	// put the singleton at NULL
-	st_env(NULL, true);
+	if (env) {
+		if (env->ip_addr)
+			ft_strdel(&env->ip_addr);
+		if (env->reverse_hostname)
+			ft_strdel(&env->reverse_hostname);
+		if (env->sockfd)
+			close(env->sockfd);
+		// put the singleton at NULL
+		st_env(NULL, true);
+	}
 	// display error message if there is one
 	error_handler(code);
 	return (code == ERR_NONE ? EXIT_SUCCESS : EXIT_FAILURE);
