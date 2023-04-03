@@ -13,7 +13,7 @@ void			ping_help()
 	);
 }
 
-static void		error_handler(t_env *env, int code)
+static void		error_handler(int code)
 {
 	const char	*msg;
 
@@ -41,6 +41,6 @@ int				ping_exit(t_env *env, int code)
 	// put the singleton at NULL
 	st_env(NULL, true);
 	// display error message if there is one
-	error_handler(env, code);
-	return (code == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+	error_handler(code);
+	return (code == ERR_NONE ? EXIT_SUCCESS : EXIT_FAILURE);
 }

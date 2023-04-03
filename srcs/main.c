@@ -11,9 +11,18 @@ static void	int_handler(int dummy)
 
 static bool	is_ipv4_addr(char *addr)
 {
-	int		len = strlen(addr);
+	int		nb;
+	char	**tmp = ft_strsplit(addr, ".");
 
-	return (len > 6 && len < 12 ? true : false);
+	if (ft_arrlen(tmp) != 4)
+		return (false);
+	for (int i = 0; i < 4; i++)
+	{
+		nb = ft_atoi(tmp[i]);
+		if (nb < 0 || nb > 255)
+			return (false);
+	}
+	return (true);
 }
 
 static int	ft_ping(t_env *env, char *addr)
