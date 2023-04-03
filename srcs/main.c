@@ -11,16 +11,18 @@ static void	int_handler(int dummy)
 
 static bool	is_ipv4_addr(char *addr)
 {
-	int		nb;
 	char	**tmp = ft_strsplit(addr, ".");
+	int		nb, arr_len = ft_arrlen(tmp);
 
-	if (ft_arrlen(tmp) != 4)
+	if (arr_len != 2 && arr_len != 4)
 		return (false);
-	for (int i = 0; i < 4; i++)
-	{
-		nb = ft_atoi(tmp[i]);
-		if (nb < 0 || nb > 255)
-			return (false);
+	if (arr_len == 4) {
+		for (int i = 0; i < 4; i++)
+		{
+			nb = ft_atoi(tmp[i]);
+			if (nb < 0 || nb > 255)
+				return (false);
+		}
 	}
 	return (true);
 }
@@ -40,7 +42,7 @@ static int	ft_ping(t_env *env, char *addr)
 	env->addr = addr;
 	env->ttl_val = 64;
 
-	printf("addr : %s, len: %ld, ttl: %d\n", env->addr, strlen(env->addr), env->ttl_val);
+	printf("addr : %s, ttl: %d\n", env->addr, env->ttl_val);
 
 	// catching interrupt
 	signal(SIGINT, int_handler);
