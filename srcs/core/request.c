@@ -65,6 +65,7 @@ static int	packet_receive(t_env *env)
 					env->ip_addr, env->msg_count,
 					env->ttl_val, env->rtt_msec);
 
+				env->total_msec += env->rtt_msec;
 				env->msg_received_count++;
 			}
 		}
@@ -91,17 +92,11 @@ static int	ping_loop(t_env *env)
 
 // print total ping stats
 static void	ping_stats(t_env *env)
-{
-	long double		total_msec;
-
-	env->time_elapsed = ((double)(env->tfe.tv_nsec - env->tfs.tv_nsec)) / 1000000.0f;
-
-	total_msec = (env->tfe.tv_sec - env->tfs.tv_sec) * 1000.0f + env->time_elapsed;
-					
+{					
 	printf("\n=== %s ping statistics ===\n", env->ip_addr);
-	printf("%d packets transmitted, %d received, %.1f%% packet loss, time %.2Lf ms\n\n",
+	printf("%d packets transmitted, %d received, %.f%% packet loss, time %.2Lf ms\n\n",
 		env->msg_count, env->msg_received_count,
-		((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f, total_msec);
+		((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f, env->total_msec);
 }
 
 // make a ping request

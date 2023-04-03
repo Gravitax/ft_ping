@@ -56,7 +56,7 @@ typedef struct	s_env
 	struct timeval		tv_out;
 	struct timespec		time_start, time_end, tfs, tfe;
 	double				time_elapsed;
-	long double			rtt_msec;
+	long double			rtt_msec, total_msec;
 }				t_env;
 
 // core
