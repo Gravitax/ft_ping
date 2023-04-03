@@ -10,8 +10,6 @@ static int	packet_fill(t_env *env)
 		
 	env->pckt.hdr.type = ICMP_ECHO;
 	env->pckt.hdr.un.echo.id = getpid();
-
-	printf("id : %d\n", env->pckt.hdr.un.echo.id);
 		
 	for (i = 0; i < sizeof(env->pckt.msg) - 1; i++)
 		env->pckt.msg[i] = i + '0';
@@ -62,10 +60,16 @@ static int	packet_receive(t_env *env)
 			}
 			else
 			{
-				printf("%d bytes from %s (h: %s) (%s): icmp_seq=%d ttl=%d time=%.2Lf ms\n",
-					PING_PKT_S, env->reverse_hostname, env->addr,
-					env->ip_addr, env->msg_count,
-					env->ttl_val, env->rtt_msec);
+				// printf("id : %d\n", env->pckt.hdr.un.echo.id);
+				if (env->verbose == true) {
+					printf("%d bytes from %s (h: %s) (%s): id=%d icmp_seq=%d ttl=%d time=%.2Lf ms\n",
+						PING_PKT_S, env->reverse_hostname, env->addr, env->ip_addr,
+						env->pckt.hdr.un.echo.id, env->msg_count,
+						env->ttl_val, env->rtt_msec);
+				} else {
+					printf("%d bytes from %s (h: %s): time=%.2Lf ms\n",
+						PING_PKT_S, env->reverse_hostname, env->addr, env->rtt_msec);
+				}
 
 				env->total_msec += env->rtt_msec;
 				env->msg_received_count++;
