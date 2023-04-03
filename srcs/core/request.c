@@ -10,6 +10,8 @@ static int	packet_fill(t_env *env)
 		
 	env->pckt.hdr.type = ICMP_ECHO;
 	env->pckt.hdr.un.echo.id = getpid();
+
+	printf("id : %d\n", env->pckt.hdr.un.echo.id);
 		
 	for (i = 0; i < sizeof(env->pckt.msg) - 1; i++)
 		env->pckt.msg[i] = i + '0';

@@ -2,4 +2,3 @@
 
 - tester ping localhost
 
-- temps total faux ?
