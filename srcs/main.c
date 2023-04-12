@@ -9,7 +9,9 @@ static int	ping_args(t_env *env, int argc, char **argv)
 	opterr = 0;
 	for (i = 0; i < argc - 1; i++)
 	{
+		// we use opt_long to handle args before and after the addr
 		opt = getopt_long(argc, argv, "vh", NULL, NULL);
+		// if opt == -1 we assume its the addr
 		if (opt == -1) {
 			env->addr = argv[i + 1];
 			break ;
@@ -17,7 +19,6 @@ static int	ping_args(t_env *env, int argc, char **argv)
 		switch (opt) {
 			case 'v': // verbose mode
 				env->verbose = true;
-				env->addr = optarg;
 				break ;
 			case '?': // illegal usage
 				return (ERR_ARGS);
