@@ -34,7 +34,9 @@ SRC_NAME=main.c\
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
 
 INC_PATH=includes/
-INC_NAME=main.h
+INC_NAME=main.h\
+		error.h\
+		icmp.h
 
 INC=$(addprefix $(INC_PATH), $(INC_NAME))
 

@@ -11,14 +11,24 @@
 # include <sys/types.h>
 # include <sys/socket.h>
 
-# include <netinet/in.h>
 # include <arpa/inet.h>
-# include <netdb.h>
+
+# include <netinet/in.h>
+// # include <netinet/in_systm.h>
+# include <netinet/ip.h>
 # include <netinet/ip_icmp.h>
 
+# include <netdb.h>
 # include <time.h>
 # include <fcntl.h>
+
 # include <signal.h>
+
+# ifdef __APPLE__
+	#include "./icmp.h"
+// #else
+// 	#include <signal.h>
+# endif
 
 
 # include "../libs/libft/libft.h"
@@ -37,7 +47,6 @@
 // in seconds
 # define RECV_TIMEOUT 1
 
-
 // ping packet structure
 struct			ping_pkt
 {
@@ -48,8 +57,9 @@ struct			ping_pkt
 typedef struct	s_env
 {
 	bool				verbose, pingloop;
-	int					sockfd, flag, addr_len;
+	int					sockfd, flag;
 	int					ttl_val, msg_count, msg_received_count;
+	unsigned int		addr_len;
 	char				*addr, *ip_addr, *reverse_hostname;
 	struct sockaddr_in	addr_con, r_addr;
 	struct ping_pkt		pckt;

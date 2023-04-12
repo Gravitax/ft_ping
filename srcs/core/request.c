@@ -7,15 +7,19 @@ static int	packet_fill(t_env *env)
 	int	i;
 
 	bzero(&env->pckt, sizeof(env->pckt));
-		
+
+	# ifdef __APPLE__
+		env->pckt.hdr.id = getpid();
+		env->pckt.hdr.sequence = env->msg_count++;
+	# else
+		env->pckt.hdr.un.echo.id = getpid();
+		env->pckt.hdr.un.echo.sequence = env->msg_count++;
+	# endif
+
 	env->pckt.hdr.type = ICMP_ECHO;
-	env->pckt.hdr.un.echo.id = getpid();
-		
 	for (i = 0; i < sizeof(env->pckt.msg) - 1; i++)
 		env->pckt.msg[i] = i + '0';
-		
 	env->pckt.msg[i] = 0;
-	env->pckt.hdr.un.echo.sequence = env->msg_count++;
 	env->pckt.hdr.checksum = ping_checksum(&env->pckt, sizeof(env->pckt));
 	return (ERR_NONE);
 }
@@ -62,9 +66,17 @@ static int	packet_receive(t_env *env)
 			{
 				// printf("id : %d\n", env->pckt.hdr.un.echo.id);
 				if (env->verbose == true) {
+					int	id;
+
+					# ifdef __APPLE__
+						id = env->pckt.hdr.id;
+					# else
+						id = env->pckt.hdr.un.echo.id;
+					# endif
+
 					printf("%d bytes from %s (h: %s) (%s): id=%d icmp_seq=%d ttl=%d time=%.2Lf ms\n",
 						PING_PKT_S, env->reverse_hostname, env->addr, env->ip_addr,
-						env->pckt.hdr.un.echo.id, env->msg_count,
+						id, env->msg_count,
 						env->ttl_val, env->rtt_msec);
 				} else {
 					printf("%d bytes from %s (h: %s): time=%.2Lf ms\n",
@@ -113,10 +125,14 @@ int			ping_request(t_env *env)
 	env->tv_out.tv_sec = RECV_TIMEOUT;
 
 	clock_gettime(CLOCK_MONOTONIC, &env->tfs);
-	
-	// set socket options at ip to TTL and value to 64,
-	// change to what you want by setting ttl_val
-	if (setsockopt(env->sockfd, SOL_IP, IP_TTL, &env->ttl_val, sizeof(env->ttl_val)) != ERR_NONE)
+
+	# ifdef __APPLE__
+		code = IPPROTO_IP;
+	# else
+		code = SOL_IP;
+	# endif
+
+	if (setsockopt(env->sockfd, code, IP_TTL, &env->ttl_val, sizeof(env->ttl_val)) != ERR_NONE)
 		return (ERR_TTL);
 	else
 		printf("Socket set to TTL...\n");
