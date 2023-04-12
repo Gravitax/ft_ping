@@ -17,9 +17,11 @@ static int	packet_fill(t_env *env)
 	# endif
 
 	env->pckt.hdr.type = ICMP_ECHO;
+
 	for (i = 0; i < sizeof(env->pckt.msg) - 1; i++)
 		env->pckt.msg[i] = i + '0';
 	env->pckt.msg[i] = 0;
+
 	env->pckt.hdr.checksum = ping_checksum(&env->pckt, sizeof(env->pckt));
 	return (ERR_NONE);
 }

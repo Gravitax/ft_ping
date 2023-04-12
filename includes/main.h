@@ -14,7 +14,6 @@
 # include <arpa/inet.h>
 
 # include <netinet/in.h>
-// # include <netinet/in_systm.h>
 # include <netinet/ip.h>
 # include <netinet/ip_icmp.h>
 
@@ -24,10 +23,10 @@
 
 # include <signal.h>
 
+#include <getopt.h>
+
 # ifdef __APPLE__
 	#include "./icmp.h"
-// #else
-// 	#include <signal.h>
 # endif
 
 
@@ -41,9 +40,8 @@
 // Automatic port number
 # define PORT_NO 0
 
-# define PING_TTL 64
-
-# define PING_SLEEP_RATE 1000000 
+# define PING_TTL			64
+# define PING_SLEEP_RATE	1000000 
 
 // Gives the timeout delay for receiving packets
 // in seconds

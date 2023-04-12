@@ -1,6 +1,7 @@
 #include "../../includes/main.h"
 
 
+// display usage
 void			ping_help()
 {
 	printf("Usage:\n"
@@ -13,6 +14,7 @@ void			ping_help()
 	);
 }
 
+// display error message
 static void		error_handler(int code)
 {
 	const char	*msg;
@@ -30,6 +32,7 @@ static void		error_handler(int code)
 		ping_help();
 }
 
+// free env + handle error + exit code
 int				ping_exit(t_env *env, int code)
 {
 	if (env) {

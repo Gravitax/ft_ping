@@ -5,7 +5,7 @@
 # include <stdint.h>
 
 
-struct	icmphdr
+struct icmphdr
 {
 	u_int8_t	type;
 	u_int8_t	code;
