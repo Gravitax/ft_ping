@@ -126,8 +126,6 @@ int			ping_request(t_env *env)
 
 	env->tv_out.tv_sec = RECV_TIMEOUT;
 
-	clock_gettime(CLOCK_MONOTONIC, &env->tfs);
-
 	# ifdef __APPLE__
 		code = IPPROTO_IP;
 	# else
@@ -144,8 +142,6 @@ int			ping_request(t_env *env)
 
 	if ((code = ping_loop(env)) != ERR_NONE)
 		return (code);
-
-	clock_gettime(CLOCK_MONOTONIC, &env->tfe);
 
 	ping_stats(env);
 	return (ERR_NONE);

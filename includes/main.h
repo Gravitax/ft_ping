@@ -64,7 +64,7 @@ typedef struct	s_env
 	struct sockaddr_in	addr_con, r_addr;
 	struct ping_pkt		pckt;
 	struct timeval		tv_out;
-	struct timespec		time_start, time_end, tfs, tfe;
+	struct timespec		time_start, time_end;
 	double				time_elapsed;
 	long double			rtt_msec, total_msec;
 }				t_env;
