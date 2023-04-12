@@ -7,3 +7,4 @@ TODO
 - test ping localhost :: OK
 - test de ping 42.fr :: OK
 - test de ping l'addresse 10 (si tu ping 256 ça va pinger l'addresse 0.0.1.0) :: OSEF
+- revoir le parsing des arguments (si l'ip nest pas a la fin actuellement ça bug)
