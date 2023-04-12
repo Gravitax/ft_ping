@@ -46,6 +46,7 @@ int				ping_exit(t_env *env, int code)
 		st_env(NULL, true);
 	}
 	// display error message if there is one
-	error_handler(code);
+	if (code > ERR_NONE)
+		error_handler(code);
 	return (code == ERR_NONE ? EXIT_SUCCESS : EXIT_FAILURE);
 }

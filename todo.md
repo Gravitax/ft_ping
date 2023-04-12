@@ -9,4 +9,3 @@ TODO
 
 - test 2 terminaux qui ping la meme addresses :: bug sur le temps de reponse
 - test de remettre le wifi apres l'avoir coupé si ça reprend bien :: bug sur le percent de packet lose
-- revoir le parsing des arguments (si l'ip nest pas a la fin actuellement ça bug)

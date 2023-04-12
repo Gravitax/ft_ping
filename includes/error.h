@@ -19,7 +19,7 @@ enum					e_error
 
 typedef	struct			s_error
 {
-	char	msg[64];
+	char	msg[256];
 	bool	display;
 	bool	usage;
 }						t_error;

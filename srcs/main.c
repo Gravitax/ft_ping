@@ -9,17 +9,16 @@ static int	ping_args(t_env *env, int argc, char **argv)
 	opterr = 0;
 	for (i = 0; i < argc - 1; i++)
 	{
-		opt = getopt(argc, argv, "v:h");
-		// only one arg and its not a flag => ADDR
-		if (opt == -1 && argc == 2) {
-			env->addr = *(argv + 1);
+		opt = getopt_long(argc, argv, "vh", NULL, NULL);
+		if (opt == -1) {
+			env->addr = argv[i + 1];
 			break ;
 		}
 		switch (opt) {
 			case 'v': // verbose mode
 				env->verbose = true;
 				env->addr = optarg;
-				return (ERR_NONE);
+				break ;
 			case '?': // illegal usage
 				return (ERR_ARGS);
 			case 'h': default: // usage
@@ -27,7 +26,7 @@ static int	ping_args(t_env *env, int argc, char **argv)
 				return (ERR_NONE);
 		}
 	}
-	return (ERR_NONE);
+	return (env->addr == NULL ? ERR_ARGS : ERR_NONE);
 }
 
 // Interrupt handler
