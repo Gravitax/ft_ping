@@ -48,7 +48,10 @@ int			ping_dns(t_env *env)
 		return (ERR_DNS);
 	// Resolves the reverse lookup of the hostname
 	env->reverse_hostname = reverse_dns_lookup(env->ip_addr);
-	if (env->reverse_hostname == NULL)
+
+	// because of test 42.fr if we got an ip addr and no reverse hostname we are ok
+	// if (env->reverse_hostname == NULL)
+	if (env->ip_addr == NULL && env->reverse_hostname == NULL)
 		return (ERR_RDNS);
 	return (ERR_NONE);
 }
