@@ -23,21 +23,20 @@ static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 // Resolves the reverse lookup of the hostname
 static char		*reverse_dns_lookup(char *ip_addr)
 {
-	struct sockaddr_in	temp_addr;
-	socklen_t			len;
-	char				buf[NI_MAXHOST], *ret_buf;
+	struct sockaddr_in	tmp_addr;
+	char				host[NI_MAXHOST], *ret_buffer;
 
-	temp_addr.sin_family = AF_INET;
-	temp_addr.sin_addr.s_addr = inet_addr(ip_addr);
-	len = sizeof(struct sockaddr_in);
+	tmp_addr.sin_family = AF_INET;
+	tmp_addr.sin_addr.s_addr = inet_addr(ip_addr);
 
-	ret_buf = (char *)malloc((strlen(buf) + 1) * sizeof(char));
+	ret_buffer = (char *)malloc((strlen(host) + 1) * sizeof(char));
 
-	if (ret_buf == NULL || getnameinfo((struct sockaddr *) &temp_addr, len, buf, sizeof(buf), NULL, 0, NI_NAMEREQD))
+	if (ret_buffer == NULL || getnameinfo((struct sockaddr *)&tmp_addr, sizeof(struct sockaddr_in),
+			host, NI_MAXHOST, NULL, 0, NI_NAMEREQD))
 		return (NULL);
-
-	strcpy(ret_buf, buf);
-	return (ret_buf);
+	// filling up ret buffer
+	strcpy(ret_buffer, host);
+	return (ret_buffer);
 }
 
 int			ping_dns(t_env *env)
@@ -48,10 +47,6 @@ int			ping_dns(t_env *env)
 		return (ERR_DNS);
 	// Resolves the reverse lookup of the hostname
 	env->reverse_hostname = reverse_dns_lookup(env->ip_addr);
-
 	// because of test 42.fr if we got an ip addr and no reverse hostname we are ok
-	// if (env->reverse_hostname == NULL)
-	if (env->ip_addr == NULL && env->reverse_hostname == NULL)
-		return (ERR_RDNS);
-	return (ERR_NONE);
+	return (env->ip_addr == NULL && env->reverse_hostname == NULL ? ERR_RDNS : ERR_NONE);
 }

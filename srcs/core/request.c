@@ -74,13 +74,13 @@ static int	packet_receive(t_env *env)
 						id = env->pckt.hdr.un.echo.id;
 					# endif
 
-					printf("%d bytes from %s (h: %s) (%s): id=%d icmp_seq=%d ttl=%d time=%.2Lf ms\n",
-						PING_PKT_S, env->reverse_hostname, env->addr, env->ip_addr,
+					printf("%d bytes from %s (%s): id=%d icmp_seq=%d ttl=%d time=%.2Lf ms\n",
+						PING_PKT_S, env->ip_addr, env->reverse_hostname,
 						id, env->msg_count,
 						env->ttl_val, env->rtt_msec);
 				} else {
-					printf("%d bytes from %s (h: %s): time=%.2Lf ms\n",
-						PING_PKT_S, env->reverse_hostname, env->addr, env->rtt_msec);
+					printf("%d bytes from %s: time=%.2Lf ms\n",
+						PING_PKT_S, env->ip_addr, env->rtt_msec);
 				}
 
 				env->total_msec += env->rtt_msec;

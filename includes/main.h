@@ -41,6 +41,8 @@
 // Automatic port number
 # define PORT_NO 0
 
+# define PING_TTL 64
+
 # define PING_SLEEP_RATE 1000000 
 
 // Gives the timeout delay for receiving packets

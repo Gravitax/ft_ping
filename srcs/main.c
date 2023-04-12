@@ -18,7 +18,7 @@ static int	ft_ping(t_env *env, char *addr)
 
 	env->pingloop = true;
 	env->addr = addr;
-	env->ttl_val = 64;
+	env->ttl_val = PING_TTL;
 
 	// catching interrupt
 	signal(SIGINT, int_handler);
