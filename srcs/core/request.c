@@ -66,25 +66,7 @@ static int	packet_receive(t_env *env)
 			}
 			else
 			{
-				// printf("id : %d\n", env->pckt.hdr.un.echo.id);
-				if (env->verbose == true) {
-					int	id;
-
-					# ifdef __APPLE__
-						id = env->pckt.hdr.id;
-					# else
-						id = env->pckt.hdr.un.echo.id;
-					# endif
-
-					printf("%d bytes from %s (%s): id=%d icmp_seq=%d ttl=%d time=%.2Lf ms\n",
-						PING_PKT_S, env->ip_addr, env->reverse_hostname,
-						id, env->msg_count,
-						env->ttl_val, env->rtt_msec);
-				} else {
-					printf("%d bytes from %s: time=%.2Lf ms\n",
-						PING_PKT_S, env->ip_addr, env->rtt_msec);
-				}
-
+				ping_stats_packet();
 				env->total_msec += env->rtt_msec;
 				env->msg_received_count++;
 			}
@@ -108,15 +90,6 @@ static int	ping_loop(t_env *env)
 			return (code);
 	}
 	return (ERR_NONE);
-}
-
-// print total ping stats
-static void	ping_stats(t_env *env)
-{					
-	printf("\n=== %s ping statistics ===\n", env->ip_addr);
-	printf("%d packets transmitted, %d received, %.f%% packet loss, time %.2Lf ms\n\n",
-		env->msg_count, env->msg_received_count,
-		((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f, env->total_msec);
 }
 
 // make a ping request
@@ -143,6 +116,6 @@ int			ping_request(t_env *env)
 	if ((code = ping_loop(env)) != ERR_NONE)
 		return (code);
 
-	ping_stats(env);
+	ping_stats_total();
 	return (ERR_NONE);
 }

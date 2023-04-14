@@ -31,7 +31,7 @@ static int	ping_args(t_env *env, int argc, char **argv)
 }
 
 // Interrupt handler
-static void	int_handler(int dummy)
+static void	sigint_handler(int dummy)
 {
 	t_env	*env = st_env(NULL, false);
 	
@@ -54,7 +54,8 @@ static int	ft_ping(t_env *env, int argc, char **argv)
 	env->ttl_val = PING_TTL;
 
 	// catching interrupt
-	signal(SIGINT, int_handler);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigint_handler);
 
 	// dns + socket + request loop
 	if ((code = ping_dns(env)) != ERR_NONE

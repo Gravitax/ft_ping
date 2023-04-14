@@ -78,6 +78,8 @@ int				ping_socket(t_env *env);
 unsigned short	ping_checksum(void *b, int len);
 void			ping_help();
 int				ping_exit(t_env *env, int code);
+void			ping_stats_packet();
+void			ping_stats_total();
 t_env			*st_env(t_env *env, bool unsave);
 
 
