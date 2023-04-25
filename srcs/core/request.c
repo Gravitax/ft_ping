@@ -46,13 +46,11 @@ static int	packet_receive(t_env *env)
 {
 	env->addr_len = sizeof(env->r_addr);
 
-	int		pckt_received = 1;
-
 	if (recvfrom(env->sockfd, &env->pckt, sizeof(env->pckt), 0, (struct sockaddr *)&env->r_addr, &env->addr_len) <= 0
 		&& env->msg_count > 1)
 	{
 		printf("Packet receive failed!\n");
-		pckt_received = 0;
+		env->flag = 0;
 	}
 
 	env->time_end = get_time_now();
@@ -60,19 +58,16 @@ static int	packet_receive(t_env *env)
 	env->rtt_msec = env->time_elapsed;
 	env->total_msec += env->rtt_msec;
 
-	if (pckt_received) {
-		// if packet was not sent, don't receive
-		if (env->flag)
+	// if packet was not sent, don't receive
+	if (env->flag) {
+		if (!(env->pckt.hdr.type == 69 && env->pckt.hdr.code == 0))
 		{
-			if (!(env->pckt.hdr.type == 69 && env->pckt.hdr.code == 0))
-			{
-				printf("Error... Packet received with ICMP type %d code %d\n", env->pckt.hdr.type, env->pckt.hdr.code);
-			}
-			else
-			{
-				ping_stats_packet((env->time_end - env->time_start) / 1000);
-				env->msg_received_count++;
-			}
+			printf("Error... Packet received with ICMP type %d code %d\n", env->pckt.hdr.type, env->pckt.hdr.code);
+		}
+		else
+		{
+			ping_stats_packet();
+			env->msg_received_count++;
 		}
 	}
 	return (ERR_NONE);
@@ -100,8 +95,6 @@ int			ping_request(t_env *env)
 {
 	int	code;
 
-	// env->tv_out.tv_sec = RECV_TIMEOUT;
-
 	# ifdef __APPLE__
 		code = IPPROTO_IP;
 	# else
@@ -112,9 +105,6 @@ int			ping_request(t_env *env)
 		return (ERR_TTL);
 	else
 		printf("Socket set to TTL...\n");
-
-	// setting timeout of recv setting
-	// setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
 
 	if ((code = ping_loop(env)) != ERR_NONE)
 		return (code);

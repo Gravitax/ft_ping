@@ -2,7 +2,7 @@
 
 
 // print ping paquet stats
-void		ping_stats_packet(long double rtt_msec)
+void		ping_stats_packet()
 {
 	t_env	*env = st_env(NULL, false);
 	int		id;
@@ -19,10 +19,10 @@ void		ping_stats_packet(long double rtt_msec)
 			printf("%d bytes from %s (%s): id=%d icmp_seq=%d ttl=%d time=%.2Lf ms\n",
 				PING_PKT_S, env->ip_addr, env->reverse_hostname,
 				id, env->msg_count,
-				env->ttl_val, rtt_msec);
+				env->ttl_val, env->rtt_msec);
 		} else {
 			printf("%d bytes from %s: time=%.2Lf ms\n",
-				PING_PKT_S, env->ip_addr, rtt_msec);
+				PING_PKT_S, env->ip_addr, env->rtt_msec);
 		}					
 	}
 }
