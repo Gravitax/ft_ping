@@ -55,6 +55,10 @@ static int	packet_receive(t_env *env)
 	}
 	else {
 		// if packet was not sent, don't receive
+		clock_gettime(CLOCK_MONOTONIC, &env->time_end);
+		env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
+		env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
+		env->total_msec += env->rtt_msec;
 		if (env->flag)
 		{
 			if (!(env->pckt.hdr.type == 69 && env->pckt.hdr.code == 0))
@@ -63,9 +67,6 @@ static int	packet_receive(t_env *env)
 			}
 			else
 			{
-				clock_gettime(CLOCK_MONOTONIC, &env->time_end);
-				env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
-				env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
 				ping_stats_packet();
 				env->msg_received_count++;
 			}
@@ -87,8 +88,6 @@ static int	ping_loop(t_env *env)
 				|| (code = packet_send(env)) != ERR_NONE
 				|| (code = packet_receive(env)) != ERR_NONE)
 			return (code);
-		env->total_msec += env->rtt_msec;
-
 	}
 	return (ERR_NONE);
 }
