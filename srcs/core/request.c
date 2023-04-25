@@ -29,6 +29,8 @@ static int	packet_fill(t_env *env)
 // send packet
 static int	packet_send(t_env *env)
 {
+	usleep(PING_SLEEP_RATE);
+	clock_gettime(CLOCK_MONOTONIC, &env->time_start);
 	if (sendto(env->sockfd, &env->pckt, sizeof(env->pckt), 0,
 		(struct sockaddr *)&env->addr_con, sizeof(env->addr_con)) <= 0)
 	{
@@ -61,6 +63,9 @@ static int	packet_receive(t_env *env)
 			}
 			else
 			{
+				clock_gettime(CLOCK_MONOTONIC, &env->time_end);
+				env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
+				env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
 				ping_stats_packet();
 				env->msg_received_count++;
 			}
@@ -76,17 +81,12 @@ static int	ping_loop(t_env *env)
 
 	while (env->pingloop)
 	{
-		usleep(PING_SLEEP_RATE);
-		clock_gettime(CLOCK_MONOTONIC, &env->time_start);
 		// flag is whether packet was sent or not
 		env->flag = 1;
 		if ((code = packet_fill(env)) != ERR_NONE
 				|| (code = packet_send(env)) != ERR_NONE
 				|| (code = packet_receive(env)) != ERR_NONE)
 			return (code);
-		clock_gettime(CLOCK_MONOTONIC, &env->time_end);
-		env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
-		env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
 		env->total_msec += env->rtt_msec;
 
 	}
