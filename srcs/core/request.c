@@ -60,7 +60,8 @@ static int	packet_receive(t_env *env)
 
 	printf("start: %Lf, end: %Lf, ellapse: %Lf\n", env->time_start, env->time_end, env->time_elapsed);
 
-	env->total_msec += env->time_elapsed;
+	env->rtt_msec = env->time_elapsed;
+	env->total_msec += env->rtt_msec;
 
 	if (pckt_received) {
 		// if packet was not sent, don't receive
