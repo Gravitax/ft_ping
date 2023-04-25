@@ -29,8 +29,8 @@ static int	packet_fill(t_env *env)
 // send packet
 static int	packet_send(t_env *env)
 {
-	usleep(PING_SLEEP_RATE);
-	clock_gettime(CLOCK_MONOTONIC, &env->time_start);
+	ft_usleep(PING_SLEEP_RATE);
+	env->time_start = get_time_now();
 
 	if (sendto(env->sockfd, &env->pckt, sizeof(env->pckt), 0,
 		(struct sockaddr *)&env->addr_con, sizeof(env->addr_con)) <= 0)
@@ -55,9 +55,13 @@ static int	packet_receive(t_env *env)
 		pckt_received = 0;
 	}
 
-	clock_gettime(CLOCK_MONOTONIC, &env->time_end);
-	env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
-	env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
+	env->time_end = get_time_now();
+	env->time_elapsed = env->time_end - env->time_start;
+
+	printf("start: %Lf, end: %Lf, ellapse: %Lf\n", env->time_start, env->time_end, env->time_elapsed);
+
+	// env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
+	env->rtt_msec = 0;
 	env->total_msec += env->rtt_msec;
 
 	if (pckt_received) {
@@ -100,7 +104,7 @@ int			ping_request(t_env *env)
 {
 	int	code;
 
-	env->tv_out.tv_sec = RECV_TIMEOUT;
+	// env->tv_out.tv_sec = RECV_TIMEOUT;
 
 	# ifdef __APPLE__
 		code = IPPROTO_IP;
@@ -114,7 +118,7 @@ int			ping_request(t_env *env)
 		printf("Socket set to TTL...\n");
 
 	// setting timeout of recv setting
-	setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
+	// setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
 
 	if ((code = ping_loop(env)) != ERR_NONE)
 		return (code);

@@ -30,7 +30,8 @@ SRC_NAME=main.c\
 	utils/checksum.c\
 	utils/exit.c\
 	utils/print.c\
-	utils/singletons.c
+	utils/singletons.c\
+	utils/time.c
 
 SRC=$(addprefix $(SRC_PATH), $(SRC_NAME))
 

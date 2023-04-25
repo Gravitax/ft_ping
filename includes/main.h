@@ -18,8 +18,10 @@
 # include <netinet/ip_icmp.h>
 
 # include <netdb.h>
-# include <time.h>
 # include <fcntl.h>
+
+# include <sys/time.h>
+# include <time.h>
 
 # include <signal.h>
 
@@ -63,10 +65,8 @@ typedef struct	s_env
 	char				*addr, *ip_addr, *reverse_hostname;
 	struct sockaddr_in	addr_con, r_addr;
 	struct ping_pkt		pckt;
-	struct timeval		tv_out;
-	struct timespec		time_start, time_end;
-	double				time_elapsed;
-	long double			rtt_msec, total_msec;
+
+	long double			rtt_msec, total_msec, time_start, time_end, time_elapsed;
 }				t_env;
 
 // core
@@ -81,6 +81,9 @@ int				ping_exit(t_env *env, int code);
 void			ping_stats_packet();
 void			ping_stats_total();
 t_env			*st_env(t_env *env, bool unsave);
+
+void			ft_usleep(unsigned int duration);
+unsigned long	get_time_now();
 
 
 #endif
