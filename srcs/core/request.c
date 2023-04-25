@@ -70,7 +70,7 @@ static int	packet_receive(t_env *env)
 			}
 			else
 			{
-				ping_stats_packet();
+				ping_stats_packet((env->time_end - env->time_start) / 1000);
 				env->msg_received_count++;
 			}
 		}
