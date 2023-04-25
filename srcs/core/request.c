@@ -45,20 +45,22 @@ static int	packet_receive(t_env *env)
 {
 	env->addr_len = sizeof(env->r_addr);
 
-	int		fail = 0;
+	int		pckt_received = 1;
 
 	if (recvfrom(env->sockfd, &env->pckt, sizeof(env->pckt), 0, (struct sockaddr *)&env->r_addr, &env->addr_len) <= 0
 		&& env->msg_count > 1)
 	{
 		printf("Packet receive failed!\n");
-		fail = 1;
+		pckt_received = 0;
 	}
-	else {
+
+	clock_gettime(CLOCK_MONOTONIC, &env->time_end);
+	env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
+	env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
+	env->total_msec += env->rtt_msec;
+
+	if (pckt_received) {
 		// if packet was not sent, don't receive
-		clock_gettime(CLOCK_MONOTONIC, &env->time_end);
-		env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
-		env->rtt_msec = (env->time_end.tv_sec - env->time_start.tv_sec) * 1000.0f + env->time_elapsed;
-		env->total_msec += env->rtt_msec;
 		if (env->flag)
 		{
 			if (!(env->pckt.hdr.type == 69 && env->pckt.hdr.code == 0))
