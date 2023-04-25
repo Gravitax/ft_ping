@@ -6,7 +6,7 @@ unsigned long	get_time_now()
 	struct timeval	timestamp;
 
 	gettimeofday(&timestamp, NULL);
-	return ((unsigned long)timestamp.tv_sec * 1 + (unsigned long)timestamp.tv_usec);
+	return ((unsigned long)timestamp.tv_sec * 1000000 + (unsigned long)timestamp.tv_usec);
 }
 
 void			ft_usleep(unsigned int duration)
