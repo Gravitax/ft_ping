@@ -57,9 +57,6 @@ static int	packet_receive(t_env *env)
 
 	env->time_end = get_time_now();
 	env->time_elapsed = (env->time_end - env->time_start) / 1000;
-
-	printf("start: %Lf, end: %Lf, ellapse: %Lf\n", env->time_start, env->time_end, env->time_elapsed);
-
 	env->rtt_msec = env->time_elapsed;
 	env->total_msec += env->rtt_msec;
 
