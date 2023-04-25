@@ -32,8 +32,6 @@ static int	packet_send(t_env *env)
 	usleep(PING_SLEEP_RATE);
 	clock_gettime(CLOCK_MONOTONIC, &env->time_start);
 
-	printf("pckt send\n");
-
 	if (sendto(env->sockfd, &env->pckt, sizeof(env->pckt), 0,
 		(struct sockaddr *)&env->addr_con, sizeof(env->addr_con)) <= 0)
 	{
@@ -56,8 +54,6 @@ static int	packet_receive(t_env *env)
 		printf("Packet receive failed!\n");
 		pckt_received = 0;
 	}
-
-	printf("pckt received\n");
 
 	clock_gettime(CLOCK_MONOTONIC, &env->time_end);
 	env->time_elapsed = ((double)(env->time_end.tv_nsec - env->time_start.tv_nsec)) / 1000000.0f;
