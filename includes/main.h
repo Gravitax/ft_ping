@@ -74,6 +74,7 @@ typedef struct	s_env
 	struct sockaddr_in	addr_con, r_addr;
 	struct ping_pkt		pckt;
 	struct ping_rtt		rtt;
+	struct timeval		tv_out;
 }				t_env;
 
 // core

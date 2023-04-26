@@ -20,7 +20,7 @@ int		ping_socket(t_env *env)
 		return (ERR_TTL);
 
 	// setting timeout of recv setting
-	// setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
+	setsockopt(env->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&env->tv_out, sizeof(env->tv_out));
 
 	return (ERR_NONE);
 }

@@ -38,7 +38,9 @@ void		ping_stats_total()
 			env->msg_count, env->msg_received_count,
 			((env->msg_count - env->msg_received_count) / env->msg_count) * 100.0f,
 			(env->rtt.tend_proc - env->rtt.tstart_proc) / 1000);
-		printf("rtt min/avg/max/sttdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n",
-			env->rtt.min, env->rtt.avg, env->rtt.max, env->rtt.sttdev);
+		if (env->msg_received_count > 0) {
+			printf("rtt min/avg/max/sttdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n",
+				env->rtt.min, env->rtt.avg, env->rtt.max, env->rtt.sttdev);
+		}
 	}
 }

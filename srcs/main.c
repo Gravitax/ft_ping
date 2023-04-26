@@ -56,6 +56,8 @@ static int	ft_ping(t_env *env, int argc, char **argv)
 
 	env->pingloop = true;
 	env->ttl_val = PING_TTL;
+	env->tv_out.tv_sec = RECV_TIMEOUT;
+    env->tv_out.tv_usec = 0;
 
 	// dns + socket + request loop
 	if ((code = ping_dns(env)) != ERR_NONE
