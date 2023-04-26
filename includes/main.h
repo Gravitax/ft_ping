@@ -56,6 +56,14 @@ struct			ping_pkt
 	char			msg[PING_PKT_S - sizeof(struct icmphdr)];
 };
 
+struct			ping_rtt
+{
+	long double		min, max, curr, avg, sttdev;
+	long double		msec, total_msec;
+	long double		tstart_proc, tend_proc;
+	long double		time_start, time_end;
+};
+
 typedef struct	s_env
 {
 	bool				verbose, pingloop;
@@ -65,8 +73,7 @@ typedef struct	s_env
 	char				*addr, *ip_addr, *reverse_hostname;
 	struct sockaddr_in	addr_con, r_addr;
 	struct ping_pkt		pckt;
-
-	long double			rtt_msec, total_msec, time_start, time_end, time_elapsed;
+	struct ping_rtt		rtt;
 }				t_env;
 
 // core

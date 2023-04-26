@@ -47,15 +47,15 @@ static int	ft_ping(t_env *env, int argc, char **argv)
 			|| env->addr == NULL)
 		return (code);
 
+	// catching interrupt
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigint_handler);
+
 	// cloning env ptr in a singleton
 	st_env(env, false);
 
 	env->pingloop = true;
 	env->ttl_val = PING_TTL;
-
-	// catching interrupt
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, sigint_handler);
 
 	// dns + socket + request loop
 	if ((code = ping_dns(env)) != ERR_NONE

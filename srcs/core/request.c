@@ -30,7 +30,7 @@ static int	packet_fill(t_env *env)
 static int	packet_send(t_env *env)
 {
 	ft_usleep(PING_SLEEP_RATE);
-	env->time_start = get_time_now();
+	env->rtt.time_start = get_time_now();
 
 	if (sendto(env->sockfd, &env->pckt, sizeof(env->pckt), 0,
 		(struct sockaddr *)&env->addr_con, sizeof(env->addr_con)) <= 0)
@@ -39,6 +39,19 @@ static int	packet_send(t_env *env)
 		env->flag = 0;
 	}
 	return (ERR_NONE);
+}
+
+static void	update_time(t_env *env)
+{
+	env->rtt.time_end = get_time_now();
+	env->rtt.msec = (env->rtt.time_end - env->rtt.time_start) / 1000;
+	env->rtt.total_msec += env->rtt.msec;
+
+	env->rtt.curr = env->rtt.msec;
+	if (env->rtt.min == 0)
+		env->rtt.min = env->rtt.curr;
+	env->rtt.min = env->rtt.msec < env->rtt.min ? env->rtt.msec : env->rtt.min;
+	env->rtt.max = env->rtt.msec > env->rtt.max ? env->rtt.msec : env->rtt.max;
 }
 
 // receive packet
@@ -53,10 +66,7 @@ static int	packet_receive(t_env *env)
 		env->flag = 0;
 	}
 
-	env->time_end = get_time_now();
-	env->time_elapsed = (env->time_end - env->time_start) / 1000;
-	env->rtt_msec = env->time_elapsed;
-	env->total_msec += env->rtt_msec;
+	update_time(env);
 
 	// if packet was not sent, don't receive
 	if (env->flag) {
@@ -78,6 +88,9 @@ static int	ping_loop(t_env *env)
 {
 	int	code;
 
+	printf("PING %s (%s) %d bytes of data\n",
+		env->ip_addr, env->reverse_hostname, PING_PKT_S - 8);
+	env->rtt.tstart_proc = get_time_now();
 	while (env->pingloop)
 	{
 		// flag is whether packet was sent or not
@@ -87,6 +100,9 @@ static int	ping_loop(t_env *env)
 				|| (code = packet_receive(env)) != ERR_NONE)
 			return (code);
 	}
+	env->rtt.tend_proc = get_time_now();
+	env->rtt.avg = env->rtt.total_msec / env->msg_received_count;
+	env->rtt.sttdev = (env->rtt.max - env->rtt.min) / 2;
 	return (ERR_NONE);
 }
 
@@ -94,17 +110,6 @@ static int	ping_loop(t_env *env)
 int			ping_request(t_env *env)
 {
 	int	code;
-
-	# ifdef __APPLE__
-		code = IPPROTO_IP;
-	# else
-		code = SOL_IP;
-	# endif
-
-	if (setsockopt(env->sockfd, code, IP_TTL, &env->ttl_val, sizeof(env->ttl_val)) != ERR_NONE)
-		return (ERR_TTL);
-	else
-		printf("Socket set to TTL...\n");
 
 	if ((code = ping_loop(env)) != ERR_NONE)
 		return (code);
