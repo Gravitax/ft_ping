@@ -2,7 +2,7 @@
 
 
 // print ping paquet stats
-void		ping_stats_packet()
+void		ping_stats_packet(void)
 {
 	t_env	*env = st_env(NULL, false);
 	int		id;
@@ -28,7 +28,7 @@ void		ping_stats_packet()
 }
 
 // print total ping stats
-void		ping_stats_total()
+void		ping_stats_total(void)
 {
 	t_env	*env = st_env(NULL, false);
 

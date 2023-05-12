@@ -84,14 +84,14 @@ int				ping_socket(t_env *env);
 
 // utils
 unsigned short	ping_checksum(void *b, int len);
-void			ping_help();
+void			ping_help(void);
 int				ping_exit(t_env *env, int code);
-void			ping_stats_packet();
-void			ping_stats_total();
+void			ping_stats_packet(void);
+void			ping_stats_total(void);
 t_env			*st_env(t_env *env, bool unsave);
 
 void			ft_usleep(unsigned int duration);
-unsigned long	get_time_now();
+unsigned long	get_time_now(void);
 
 
 #endif

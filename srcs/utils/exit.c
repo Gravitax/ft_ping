@@ -2,7 +2,7 @@
 
 
 // display usage
-void			ping_help()
+void			ping_help(void)
 {
 	printf("Usage:\n"
 		"    ft_ping [options] <destination>\n"

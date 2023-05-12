@@ -1,7 +1,7 @@
 #include "main.h"
 
 
-unsigned long	get_time_now()
+unsigned long	get_time_now(void)
 {
 	struct timeval	timestamp;
 

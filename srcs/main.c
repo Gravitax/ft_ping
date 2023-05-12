@@ -33,6 +33,8 @@ static int	ping_args(t_env *env, int argc, char **argv)
 // Interrupt handler
 static void	sigint_handler(int dummy)
 {
+	(void)dummy;
+
 	t_env	*env = st_env(NULL, false);
 	
 	env->pingloop = false;

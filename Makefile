@@ -2,7 +2,7 @@ NAME=ft_ping
 
 CC=gcc
 
-# FLAGS = -Wall -Werror -Wextra -Weverything
+FLAGS = -Wall -Werror -Wextra
 FLAGS += -Wno-documentation
 FLAGS += -Wno-documentation-unknown-command
 FLAGS += -Wno-reserved-id-macro

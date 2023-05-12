@@ -4,7 +4,7 @@
 // filling packet
 static int	packet_fill(t_env *env)
 {
-	int	i;
+	unsigned int	i;
 
 	bzero(&env->pckt, sizeof(env->pckt));
 

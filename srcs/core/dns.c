@@ -6,7 +6,7 @@
 static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 {
 	struct hostent	*host_entity;
-	char			*ip = (char *)malloc(NI_MAXHOST * sizeof(char)), *tmp;
+	char			*ip = (char *)malloc(NI_MAXHOST * sizeof(char));
 
 	if (ip == NULL)
 		return (NULL);
