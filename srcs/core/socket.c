@@ -1,4 +1,4 @@
-#include "../../includes/main.h"
+#include "main.h"
 
 
 int		ping_socket(t_env *env)

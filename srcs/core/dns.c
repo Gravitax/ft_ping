@@ -1,15 +1,19 @@
 
-#include "../../includes/main.h"
+#include "main.h"
 
 
 // Performs a DNS lookup
 static char		*dns_lookup(char *addr_host, struct sockaddr_in *addr_con)
 {
 	struct hostent	*host_entity;
-	char			*ip = (char *)malloc(NI_MAXHOST * sizeof(char));
+	char			*ip = (char *)malloc(NI_MAXHOST * sizeof(char)), *tmp;
 
-	if (ip == NULL || (host_entity = gethostbyname(addr_host)) == NULL)
+	if (ip == NULL)
 		return (NULL);
+	if ((host_entity = gethostbyname(addr_host)) == NULL) {
+		ft_strdel(&ip);
+		return (NULL);
+	}
 	
 	// filling up address structure
 	strcpy(ip, inet_ntoa(*(struct in_addr *)host_entity->h_addr));
@@ -31,9 +35,12 @@ static char		*reverse_dns_lookup(char *ip_addr)
 
 	ret_buffer = (char *)malloc((strlen(host) + 1) * sizeof(char));
 
-	if (ret_buffer == NULL || getnameinfo((struct sockaddr *)&tmp_addr, sizeof(struct sockaddr_in),
-			host, NI_MAXHOST, NULL, 0, NI_NAMEREQD))
+	if (ret_buffer == NULL)
 		return (NULL);
+	if (getnameinfo((struct sockaddr *)&tmp_addr, sizeof(struct sockaddr_in), host, NI_MAXHOST, NULL, 0, NI_NAMEREQD)) {
+		ft_strdel(&ret_buffer);
+		return (NULL);
+	}
 	// filling up ret buffer
 	strcpy(ret_buffer, host);
 	return (ret_buffer);

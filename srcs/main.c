@@ -1,4 +1,4 @@
-#include "../includes/main.h"
+#include "main.h"
 
 
 static int	ping_args(t_env *env, int argc, char **argv)
